@@ -8,12 +8,15 @@ public class UIManager : MonoBehaviour
     [SerializeField] Screen homeScreen = null;
     [SerializeField] Screen gameScreen = null;
     [SerializeField] Screen failScreen = null;
-    [SerializeField] Screen PassScreen = null;
+    [SerializeField] Screen passScreen = null;
+
+    [SerializeField]Transform[] elementsToHide;
 
     private static UIManager instance = null;
     List<Screen> screens = new List<Screen>();
     private Screen currentScreen = null;
     private Screen previousScreen  = null;
+
 
     /// <summary>
     /// Awake is called when the script instance is being loaded.
@@ -84,7 +87,23 @@ public class UIManager : MonoBehaviour
 
     public void OpenPassScreen()
     {
-        SwitchScreen(PassScreen);
+        SwitchScreen(passScreen);
+    }
+
+    public void HideElements()
+    {
+        foreach(Transform item in elementsToHide)
+        {
+            item.gameObject.SetActive(false);
+        }
+    }
+
+    public void ShowElements()
+    {
+         foreach(Transform item in elementsToHide)
+        {
+            item.gameObject.SetActive(true);
+        }
     }
 
 
