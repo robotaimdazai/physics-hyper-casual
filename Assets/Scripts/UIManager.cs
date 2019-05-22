@@ -16,6 +16,7 @@ public class UIManager : MonoBehaviour
     List<Screen> screens = new List<Screen>();
     private Screen currentScreen = null;
     private Screen previousScreen  = null;
+    [SerializeField]OnHookTextController onHookController = null;
 
 
     /// <summary>
@@ -103,6 +104,14 @@ public class UIManager : MonoBehaviour
          foreach(Transform item in elementsToHide)
         {
             item.gameObject.SetActive(true);
+        }
+    }
+
+    public void ShowOnHookText(string text)
+    {
+        if (onHookController)
+        {
+            onHookController.ShowText(text);
         }
     }
 

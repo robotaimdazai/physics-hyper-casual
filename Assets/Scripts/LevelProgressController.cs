@@ -5,10 +5,11 @@ using UnityEngine.UI;
 
 public class LevelProgressController : MonoBehaviour
 {
-    [SerializeField]private Slider slider = null;
-    [SerializeField] float accuracy = 0.5f;
+    [SerializeField] RectTransform fill = null;
 
     float totalDistance = 0f;
+    float fillStartPosX=-570f;
+    float fillEndPosX =-24f;
 
     // Start is called before the first frame update
     void Start()
@@ -37,9 +38,17 @@ public class LevelProgressController : MonoBehaviour
 
         float normalizedSliderValue = 1- (remainingDistance/totalDistance);
 
-        if (slider)
+        if (fill)
         {
-            slider.value  = normalizedSliderValue;
+            SetValue(normalizedSliderValue);
         }
     }
+
+    private void SetValue(float value)
+    {
+        float fillNewPosX = Mathf.Lerp(fillStartPosX,fillEndPosX,value);
+        fill.localPosition = new Vector3(fillNewPosX,0f,0f);
+    }
+
+
 }
