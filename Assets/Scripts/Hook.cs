@@ -21,4 +21,8 @@ public class Hook : MonoBehaviour
     {
         _hinge = GetComponent<HingeJoint2D>();
     }
+    private void OnEnable() 
+    {
+        IsOn = false;
+    }
 }

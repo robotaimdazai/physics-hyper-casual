@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 public class Player : MonoBehaviour
 {
@@ -8,10 +9,15 @@ public class Player : MonoBehaviour
 
     public static Player Instance{get{return instance;}}
 
+    [SerializeField]CinemachineVirtualCamera playerCamera = null;
+
     static Player instance = null;
     Animator animator = null;
     HookGrabber hookGrabber = null;
     Rigidbody2D rigidbody2d = null;
+    
+
+
   
     // Start is called before the first frame update
 
@@ -79,6 +85,22 @@ public class Player : MonoBehaviour
         }
         DoJumpAnimation();
 
+    }
+
+    public void TurnOnCamera()
+    {
+        if (playerCamera)
+        {
+            playerCamera.gameObject.SetActive(true);
+        }
+    }
+
+    public void TurnOffCamera()
+    {
+        if (playerCamera)
+        {
+            playerCamera.gameObject.SetActive(false);
+        }
     }
 
    

@@ -28,7 +28,7 @@ public class HookGrabber : MonoBehaviour
     {
         if (!GameManager.Instance.InGameLoop)
         {
-            return;
+            //return;
         }
 
         if (InputController.Instance.IsTapped)

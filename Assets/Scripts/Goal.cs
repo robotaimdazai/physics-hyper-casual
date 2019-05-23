@@ -40,6 +40,7 @@ public class Goal : MonoBehaviour
                 UIManager.Instance.OpenPassScreen();
                 levelPassed = true;
                 goalCamera.gameObject.SetActive(true);
+                Player.Instance.TurnOffCamera();
             }
         }
         else
@@ -57,6 +58,11 @@ public class Goal : MonoBehaviour
         }
         
         return ret;
+    }
+
+    public void ResetLevelStatus()
+    {
+        levelPassed = false;
     }
 
     private void OnDrawGizmos() 
