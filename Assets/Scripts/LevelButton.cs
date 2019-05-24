@@ -27,5 +27,10 @@ public class LevelButton : MonoBehaviour
 
         LevelManager.Instance.ActivateLevel(levelNumber);
     }
+
+    public void OpenHomeScreen()
+    {
+        UIManager.Instance.OpenHomeScreen();
+    }
     
 }

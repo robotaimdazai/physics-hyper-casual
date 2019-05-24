@@ -5,24 +5,50 @@ using UnityEngine.UI;
 
 public class LevelProgressController : MonoBehaviour
 {
+    public static LevelProgressController Instance{get{return instance;}}
+    static LevelProgressController instance = null;
+
     [SerializeField] RectTransform fill = null;
 
     float totalDistance = 0f;
     float fillStartPosX=-570f;
     float fillEndPosX =-24f;
 
-    // Start is called before the first frame update
+    Goal activeGoal = null;
+
+    /// <summary>
+    /// Awake is called when the script instance is being loaded.
+    /// </summary>
+    void Awake()
+    {
+        if (instance==null)
+        {
+            instance = this;
+        }
+        else if(instance!=this)
+        {
+            Destroy(gameObject);
+        }
+    }
+
     void Start()
     {
-        totalDistance = Goal.Instance.transform.position.x - Player.Instance.transform.position.x;
+        RecalculateGoalDistance();
     }
+
+    public void RecalculateGoalDistance()
+    {
+        activeGoal = Goal.GetActiveGoal();
+        totalDistance = activeGoal.transform.position.x - Player.Instance.transform.position.x;
+    }
+
 
     // Update is called once per frame
     void LateUpdate()
     {
        
         float playerX = Player.Instance.transform.position.x;
-        float goalX = Goal.Instance.transform.position.x;
+        float goalX = activeGoal.transform.position.x;
 
         if (playerX<0)
         {

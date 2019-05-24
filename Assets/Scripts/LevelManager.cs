@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class LevelManager : MonoBehaviour
 {
@@ -9,8 +10,11 @@ public class LevelManager : MonoBehaviour
 
     [SerializeField] GameObject levelButtonPrefab = null;
     [SerializeField] Transform levelSelectionPanel = null;
+    [SerializeField] TextMeshProUGUI currentLevelText = null;
 
     Transform activeLevel = null;
+    int activeLevelIndex = 0;
+    Goal activeGoal = null;
 
     /// <summary>
     /// Awake is called when the script instance is being loaded.
@@ -30,8 +34,8 @@ public class LevelManager : MonoBehaviour
 
     private void Start() 
     {
+        activeGoal = Goal.GetActiveGoal();
         CreateLevelButtons();
-
         //Activate Level 1 at start
         ActivateLevel(1);
     }
@@ -50,6 +54,7 @@ public class LevelManager : MonoBehaviour
             if (levelButton)
             {
                 levelButton.SetLevelNumber(levelNumber);
+                
             }
             levelNumber++;
         }
@@ -58,7 +63,9 @@ public class LevelManager : MonoBehaviour
     public void ActivateLevel(int level)
     {
         //subtracting 1 because child index start from 0
+        activeLevelIndex = level;
         int levelToActivateInChild  = level - 1;
+        
         if (levelToActivateInChild<0)
         {
             return;
@@ -70,6 +77,10 @@ public class LevelManager : MonoBehaviour
             {
                 activeLevel = currentLevel;
                 currentLevel.gameObject.SetActive(true);
+                if (currentLevelText)
+                {
+                    currentLevelText.text = "Level "+ level;
+                }
             }
             else
             {
@@ -77,7 +88,9 @@ public class LevelManager : MonoBehaviour
             }
         }
 
-        SetPlayerToStartPosition();     
+        SetPlayerToStartPosition();
+        activeGoal = Goal.GetActiveGoal();
+        LevelProgressController.Instance.RecalculateGoalDistance();
     }
 
     private void SetPlayerToStartPosition()
@@ -104,11 +117,30 @@ public class LevelManager : MonoBehaviour
         //turning off and on enables all hooks by onEnable Function
         activeLevel.gameObject.SetActive(false);
         activeLevel.gameObject.SetActive(true);
-
+        GameManager.Instance.InGameLoop = true;
         SetPlayerToStartPosition();
-        Player.Instance.TurnOnCamera();
         UIManager.Instance.OpenHomeScreen();
-        Goal.Instance.ResetLevelStatus();
+        activeGoal.ResetLevelStatus();
+        activeGoal.TurnOffCamera();
+        Player.Instance.DeathCameraUnFollowPlayer();
+        Player.Instance.TurnOnCamera();
+    }
+
+    public void LoadNextLevel()
+    {
+        int nextLevel = activeLevelIndex + 1;
+        if (nextLevel>transform.childCount)
+        {
+            Debug.Log("No More Levels");
+            return;
+        }
+        GameManager.Instance.InGameLoop = true;
+        ActivateLevel(nextLevel);
+        UIManager.Instance.OpenHomeScreen();
+        activeGoal.ResetLevelStatus();
+        activeGoal.TurnOffCamera();
+        Player.Instance.DeathCameraUnFollowPlayer();
+        Player.Instance.TurnOnCamera();
     }
 
    

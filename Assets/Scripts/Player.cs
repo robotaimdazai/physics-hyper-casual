@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     public static Player Instance{get{return instance;}}
 
     [SerializeField]CinemachineVirtualCamera playerCamera = null;
+    [SerializeField] CinemachineVirtualCamera deathCamera = null;
 
     static Player instance = null;
     Animator animator = null;
@@ -102,6 +103,25 @@ public class Player : MonoBehaviour
             playerCamera.gameObject.SetActive(false);
         }
     }
+
+    public void SetDeathCameraPosition()
+    {
+        deathCamera.transform.position = new Vector3(transform.position.x,deathCamera.transform.position.y,
+        deathCamera.transform.position.z);
+    }
+
+    public void DeathCameraFollowPlayer()
+    {
+        deathCamera.Follow = transform;
+        deathCamera.LookAt = transform;
+    }
+
+    public void DeathCameraUnFollowPlayer()
+    {
+        deathCamera.Follow = null;
+        deathCamera.LookAt = null;
+    }
+
 
    
    

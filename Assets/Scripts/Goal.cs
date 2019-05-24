@@ -5,8 +5,6 @@ using Cinemachine;
 
 public class Goal : MonoBehaviour
 {
-    public static Goal Instance{get{return instance;}}
-    private static Goal instance = null;
 
     [SerializeField]float timeCheck = 1.5f;
     [SerializeField] float radius = 2f;
@@ -19,14 +17,7 @@ public class Goal : MonoBehaviour
    
     void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else if(instance!=this)
-        {
-            Destroy(gameObject);
-        }
+       
     }
 
     private void Update() 
@@ -70,6 +61,18 @@ public class Goal : MonoBehaviour
         Gizmos.color = Color.green;
         // goal pivot point is not in centre, this offset balances it
         Gizmos.DrawWireSphere(transform.position + offset,radius);
+    }
+
+    public static Goal GetActiveGoal()
+    {
+        Goal activeGoal = null;
+        activeGoal = FindObjectOfType<Goal>();
+        return activeGoal;
+    }
+
+    public void TurnOffCamera()
+    {
+        goalCamera.gameObject.SetActive(false);
     }
    
    

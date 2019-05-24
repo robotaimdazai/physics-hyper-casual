@@ -15,6 +15,7 @@ public static class Config
 
     public readonly static float GoalCameraX = 0.5f;
 
+
 }
 
 
