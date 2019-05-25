@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.IO;
 public class Testing:MonoBehaviour
 {
     [MenuItem("Testing/Reset Player Pos")]
@@ -15,5 +16,21 @@ public class Testing:MonoBehaviour
             player.transform.position = startPlatform.transform.position + offset;
         }
         
+    }
+
+    [MenuItem("Testing/Delete all saved data")]
+    public static void DeleteAllSavedData()
+    {
+        if (File.Exists(Application.persistentDataPath + DataSaver.LevelDataSavePath))
+        {
+            File.Delete(Application.persistentDataPath + DataSaver.LevelDataSavePath);
+            Debug.Log("Levels data deleted");
+        }
+        if (File.Exists(Application.persistentDataPath + DataSaver.LastLevelPlayedSavePath))
+        {
+            File.Delete(Application.persistentDataPath + DataSaver.LastLevelPlayedSavePath);
+            Debug.Log("last level data deleted");
+        }
+
     }
 }

@@ -32,6 +32,7 @@ public class Goal : MonoBehaviour
                 levelPassed = true;
                 goalCamera.gameObject.SetActive(true);
                 Player.Instance.TurnOffCamera();
+                LevelManager.Instance.SetCurrentLevelClear(false);
             }
         }
         else

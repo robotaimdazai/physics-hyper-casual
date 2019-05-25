@@ -8,9 +8,17 @@ public class LevelManager : MonoBehaviour
     public static LevelManager Instance{get{return instance;}}
     static LevelManager instance = null;
 
+    public StartPlatform ActiveStartPlatform{ get; private set;}
+
+    [SerializeField] bool testMode = true;
     [SerializeField] GameObject levelButtonPrefab = null;
     [SerializeField] Transform levelSelectionPanel = null;
     [SerializeField] TextMeshProUGUI currentLevelText = null;
+    [SerializeField] TextMeshProUGUI crownsAchievedText = null;
+
+    [Header("Level")]
+    public LevelData[] levels;
+
 
     Transform activeLevel = null;
     int activeLevelIndex = 0;
@@ -34,10 +42,22 @@ public class LevelManager : MonoBehaviour
 
     private void Start() 
     {
-        activeGoal = Goal.GetActiveGoal();
+        LevelData[] loadedLevelData = DataSaver.LoadLevelData();
+        if (loadedLevelData!=null)
+        {
+            levels = loadedLevelData;
+        }
+        int levelToLoad = 1;
+        int lastPlayedLevelSaved = DataSaver.LoadLastLevelPlayed();
+        if (lastPlayedLevelSaved>0)
+        {
+            levelToLoad = lastPlayedLevelSaved;
+        }
         CreateLevelButtons();
         //Activate Level 1 at start
-        ActivateLevel(1);
+        ActivateLevel(levelToLoad);
+        activeGoal = Goal.GetActiveGoal();
+        UpdateCrownsAchieved();
     }
     
     void CreateLevelButtons()
@@ -46,7 +66,9 @@ public class LevelManager : MonoBehaviour
         {
             return;
         }
+
         int levelNumber = 1;
+        int index = 0; //this is used for transferring data from levels array to buttons
         foreach(Transform items in transform)
         {
             GameObject levelButtonObject = Instantiate(levelButtonPrefab,levelSelectionPanel);
@@ -54,9 +76,19 @@ public class LevelManager : MonoBehaviour
             if (levelButton)
             {
                 levelButton.SetLevelNumber(levelNumber);
-                
+                if(levels.Length != transform.childCount)
+                {
+                    Debug.Log("Levels array and level objects are not consistent");
+                }
+                if (!testMode)
+                {
+                    levelButton.IsLocked = levels[index].Islocked;  
+                }     
+                levelButton.IsClear = levels[index].IsClear;
+                levelButton.HasCrown = levels[index].HasCrown;
             }
             levelNumber++;
+            index++;
         }
     }
 
@@ -95,19 +127,21 @@ public class LevelManager : MonoBehaviour
 
     private void SetPlayerToStartPosition()
     {
-        Transform startPlatform = GetActiveStartPlatform();
-        Player.Instance.transform.position = startPlatform.position + Vector3.up * 1.2f;
+        StartPlatform startPlatform = GetActiveStartPlatform();
+        ActiveStartPlatform = startPlatform;
+        startPlatform.EnableCollisionWithPlayer();
+        Player.Instance.transform.position = startPlatform.transform.position + Vector3.up * 1.2f;
         Player.Instance.transform.rotation = Quaternion.identity;
     }
 
 //------------Helper
-    Transform GetActiveStartPlatform()
+    StartPlatform GetActiveStartPlatform()
     {
-        Transform platform = null;
+        StartPlatform platform = null;
          StartPlatform startPlatform = FindObjectOfType<StartPlatform>();
          if (startPlatform)
          {
-             platform = startPlatform.transform;
+             platform = startPlatform;
          }
         return platform;
     }
@@ -141,6 +175,83 @@ public class LevelManager : MonoBehaviour
         activeGoal.TurnOffCamera();
         Player.Instance.DeathCameraUnFollowPlayer();
         Player.Instance.TurnOnCamera();
+    }
+
+    public void SetCurrentLevelClear(bool hasCrown)
+    {
+       
+        int currentLevelIndexInArray = activeLevelIndex - 1;
+
+        if (currentLevelIndexInArray >= transform.childCount)
+        {
+            Debug.Log("No More Levels");
+            return;
+        }
+
+        levels[currentLevelIndexInArray].IsClear = true;
+        if (!levels[currentLevelIndexInArray].HasCrown)
+        {
+            levels[currentLevelIndexInArray].HasCrown = hasCrown;
+        }
+        // getting level Button for cleared Level
+        LevelButton levelButton = levelSelectionPanel.GetChild(currentLevelIndexInArray).GetComponent<LevelButton>();
+        levelButton.IsClear = true;
+        if (!levelButton.HasCrown)
+        {
+            levelButton.HasCrown = hasCrown;
+        }
+        //unlocking nextLevel
+        int nextLevel = currentLevelIndexInArray+1;
+        if (nextLevel<levels.Length)
+        {
+             levels[nextLevel].Islocked = false;
+            LevelButton nextLevelButton = levelSelectionPanel.GetChild(nextLevel).GetComponent<LevelButton>();
+            nextLevelButton.IsLocked = false;
+        }
+       
+       //counting crowns achieved again
+        UpdateCrownsAchieved();
+
+    }
+    public  /// <summary>
+    /// Callback sent to all game objects before the application is quit.
+    /// </summary>
+    void OnApplicationQuit()
+    {
+        DataSaver.SaveLevelData(levels);
+        DataSaver.SaveLastLevelPlayed(activeLevelIndex);
+    }
+    /// <summary>
+    /// Callback sent to all game objects when the player pauses.
+    /// </summary>
+    /// <param name="pauseStatus">The pause state of the application.</param>
+    void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus)
+        {
+            DataSaver.SaveLevelData(levels);
+            DataSaver.SaveLastLevelPlayed(activeLevelIndex);
+        }
+    }
+
+    private void UpdateCrownsAchieved()
+    {
+        int crownsAchieved = 0;
+        foreach (Transform item in levelSelectionPanel)
+        {
+            LevelButton levelButton = item.GetComponent<LevelButton>();
+            if (levelButton)
+            {
+                if (levelButton.HasCrown)
+                {
+                    crownsAchieved++;
+                }
+            }
+        }
+        if (crownsAchievedText)
+        {
+            crownsAchievedText.text = crownsAchieved + " / " + levelSelectionPanel.childCount; 
+        }
     }
 
    

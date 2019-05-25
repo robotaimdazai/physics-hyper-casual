@@ -11,9 +11,16 @@ public class JumpButton : MonoBehaviour, IPointerClickHandler
     {
         Player.Instance.DoStartJump();
         UIManager.Instance.OpenGameScreen();
+        StartPlatform startPlatform = LevelManager.Instance.ActiveStartPlatform;
+        if (startPlatform)
+        {
+            startPlatform.DisableCollisionWithPlayer();
+        }
         if (OnJump!=null)
         {
             OnJump.Invoke();
         }
     }
+
+    
 }
