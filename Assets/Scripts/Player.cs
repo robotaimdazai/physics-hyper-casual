@@ -6,7 +6,6 @@ using Cinemachine;
 public class Player : MonoBehaviour
 {
     [SerializeField] ParticleSystem ropeGrabParticle = null;
-
     public static Player Instance{get{return instance;}}
 
     [SerializeField]CinemachineVirtualCamera playerCamera = null;
@@ -16,6 +15,7 @@ public class Player : MonoBehaviour
     Animator animator = null;
     HookGrabber hookGrabber = null;
     Rigidbody2D rigidbody2d = null;
+    ParticleController particleController = null;
     
 
 
@@ -44,6 +44,7 @@ public class Player : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         hookGrabber = GetComponent<HookGrabber>();
         rigidbody2d = GetComponent<Rigidbody2D>();
+        particleController = GetComponent<ParticleController>();
     }
 
 
@@ -84,6 +85,8 @@ public class Player : MonoBehaviour
         {
             rigidbody2d.AddForce(Config.StartJumpVector * Config.StartJumpForce,ForceMode2D.Impulse);
         }
+        Vector3 offset = Vector3.down * 0.5f;
+        particleController.ShowParticle(0,transform.position + offset,Quaternion.identity);
         DoJumpAnimation();
 
     }
@@ -122,7 +125,11 @@ public class Player : MonoBehaviour
         deathCamera.LookAt = null;
     }
 
+    private void OnCollisionEnter2D(Collision2D collision) 
+    {
+        Vector2 offset = Vector3.right * 0.5f;
+        particleController.ShowParticle(0,collision.contacts[0].point + offset,Quaternion.identity);
+    }
 
-   
    
 }

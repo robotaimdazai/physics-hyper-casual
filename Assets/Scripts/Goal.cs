@@ -12,6 +12,9 @@ public class Goal : MonoBehaviour
     [SerializeField] LayerMask playerLayerMask;
     [SerializeField] CinemachineVirtualCamera goalCamera =null;
 
+    [SerializeField] GameObject goalParticles = null;
+
+
     float timer = 0f;
     bool levelPassed = false;
    
@@ -33,6 +36,7 @@ public class Goal : MonoBehaviour
                 goalCamera.gameObject.SetActive(true);
                 Player.Instance.TurnOffCamera();
                 LevelManager.Instance.SetCurrentLevelClear(false);
+                SpawnGoalParticles();
             }
         }
         else
@@ -75,7 +79,11 @@ public class Goal : MonoBehaviour
     {
         goalCamera.gameObject.SetActive(false);
     }
-   
+
+   private void SpawnGoalParticles()
+   {
+       Instantiate(goalParticles,transform.position + offset,Quaternion.identity);
+   }
    
    
 }
