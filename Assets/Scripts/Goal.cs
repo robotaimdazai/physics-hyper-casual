@@ -17,10 +17,11 @@ public class Goal : MonoBehaviour
 
     float timer = 0f;
     bool levelPassed = false;
+    bool crownPicked = false;
    
-    void Awake()
+    private void OnEnable() 
     {
-       
+        goalCamera.gameObject.SetActive(false);
     }
 
     private void Update() 
@@ -35,7 +36,11 @@ public class Goal : MonoBehaviour
                 levelPassed = true;
                 goalCamera.gameObject.SetActive(true);
                 Player.Instance.TurnOffCamera();
-                LevelManager.Instance.SetCurrentLevelClear(false);
+                if (LevelManager.Instance.HasCrownForCurrentLevel())
+                {
+                    crownPicked = true;
+                }
+                LevelManager.Instance.SetCurrentLevelClear(crownPicked);
                 SpawnGoalParticles();
             }
         }
@@ -83,6 +88,11 @@ public class Goal : MonoBehaviour
    private void SpawnGoalParticles()
    {
        Instantiate(goalParticles,transform.position + offset,Quaternion.identity);
+   }
+
+   public void CownPicked()
+   {
+       crownPicked = true;
    }
    
    

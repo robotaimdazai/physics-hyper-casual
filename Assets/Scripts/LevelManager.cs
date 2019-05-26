@@ -38,9 +38,12 @@ public class LevelManager : MonoBehaviour
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
+
+        Init();
     }
 
-    private void Start() 
+
+    public void Init()
     {
         LevelData[] loadedLevelData = DataSaver.LoadLevelData();
         if (loadedLevelData!=null)
@@ -189,20 +192,18 @@ public class LevelManager : MonoBehaviour
         }
 
         levels[currentLevelIndexInArray].IsClear = true;
-        if (!levels[currentLevelIndexInArray].HasCrown)
-        {
-            levels[currentLevelIndexInArray].HasCrown = hasCrown;
-        }
+       
+        levels[currentLevelIndexInArray].HasCrown = hasCrown;
+        
         // getting level Button for cleared Level
         LevelButton levelButton = levelSelectionPanel.GetChild(currentLevelIndexInArray).GetComponent<LevelButton>();
         levelButton.IsClear = true;
-        if (!levelButton.HasCrown)
-        {
-            levelButton.HasCrown = hasCrown;
-        }
+        
+        levelButton.HasCrown = hasCrown;
+        
         //unlocking nextLevel
         int nextLevel = currentLevelIndexInArray+1;
-        if (nextLevel<levels.Length)
+        if (nextLevel<levels.Length && !levels[nextLevel].IsClear)
         {
              levels[nextLevel].Islocked = false;
             LevelButton nextLevelButton = levelSelectionPanel.GetChild(nextLevel).GetComponent<LevelButton>();
@@ -252,6 +253,17 @@ public class LevelManager : MonoBehaviour
         {
             crownsAchievedText.text = crownsAchieved + " / " + levelSelectionPanel.childCount; 
         }
+    }
+
+    public bool HasCrownForCurrentLevel()
+    {
+        bool ret = false;
+        if (levels[activeLevelIndex-1].HasCrown)
+        {
+            ret = true;
+        }
+
+        return ret;
     }
 
    
