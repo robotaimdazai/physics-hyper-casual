@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class Floor : MonoBehaviour
 {
+    [SerializeField] AudioClip failSound;
     private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Player") && GameManager.Instance.InGameLoop)
@@ -15,6 +16,7 @@ public class Floor : MonoBehaviour
             Player.Instance.DeathCameraFollowPlayer();
             Player.Instance.TurnOffCamera();
             UIManager.Instance.OpenFailScreen();
+            SoundManager.Instance.PlaySFX(failSound);
            
         }
     }

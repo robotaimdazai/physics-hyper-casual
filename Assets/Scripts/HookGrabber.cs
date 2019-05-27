@@ -10,6 +10,9 @@ public class HookGrabber : MonoBehaviour
     [SerializeField] float _range = 4f;
     [SerializeField] LayerMask _hookLayer;
 
+    [SerializeField] AudioClip grabHookSound;
+    [SerializeField] AudioClip unhookSound;
+
     HookDetector hookDetector = new HookDetector();
     Rigidbody2D _rigidbody = null;
     RopeRenderer ropeRenderer = null;
@@ -63,6 +66,7 @@ public class HookGrabber : MonoBehaviour
                 _rigidbody.AddForce(direction.normalized * Config.UnhookForce,ForceMode2D.Impulse);
                 isDashAvailable = true;
                 ropeRenderer.ClearRope();
+                SoundManager.Instance.PlaySFX(unhookSound);
 
 
             }
@@ -95,6 +99,8 @@ public class HookGrabber : MonoBehaviour
                     Player.Instance.ShowRopeGrabParticles();
                     //Show OnHook Text
                     UIManager.Instance.ShowOnHookText("Smooth");
+                    
+                    SoundManager.Instance.PlaySFX(grabHookSound);
 
                     isDashAvailable = false;
                 }

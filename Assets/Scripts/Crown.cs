@@ -6,6 +6,7 @@ using UnityEngine.Events;
 public class Crown : MonoBehaviour
 {
     [SerializeField] GameObject crownPickParticle = null;
+    [SerializeField] AudioClip crownPickSound = null;
     public UnityEvent OnCrownPicked;
 
     private void Start() 
@@ -24,6 +25,7 @@ public class Crown : MonoBehaviour
             if (OnCrownPicked!=null)
             {
                 OnCrownPicked.Invoke();
+                SoundManager.Instance.PlaySFX(crownPickSound);
             }
 
         }

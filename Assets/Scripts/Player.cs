@@ -11,6 +11,10 @@ public class Player : MonoBehaviour
     [SerializeField]CinemachineVirtualCamera playerCamera = null;
     [SerializeField] CinemachineVirtualCamera deathCamera = null;
 
+    [Header("Sounds")]
+    [SerializeField] AudioClip jumpSound;
+    
+
     static Player instance = null;
     Animator animator = null;
     HookGrabber hookGrabber = null;
@@ -88,6 +92,7 @@ public class Player : MonoBehaviour
         Vector3 offset = Vector3.down * 0.5f;
         particleController.ShowParticle(0,transform.position + offset,Quaternion.identity);
         DoJumpAnimation();
+        SoundManager.Instance.PlaySFX(jumpSound);
 
     }
 

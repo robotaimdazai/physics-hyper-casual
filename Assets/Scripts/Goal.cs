@@ -13,6 +13,7 @@ public class Goal : MonoBehaviour
     [SerializeField] CinemachineVirtualCamera goalCamera =null;
 
     [SerializeField] GameObject goalParticles = null;
+    [SerializeField] AudioClip levelCompleteSound = null;
 
 
     float timer = 0f;
@@ -42,6 +43,7 @@ public class Goal : MonoBehaviour
                 }
                 LevelManager.Instance.SetCurrentLevelClear(crownPicked);
                 SpawnGoalParticles();
+                SoundManager.Instance.PlaySFX(levelCompleteSound);
             }
         }
         else

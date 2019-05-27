@@ -95,6 +95,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   crownPickParticle: {fileID: 1833684202174258798, guid: a069ae39a232c644f879b9cfefb77668,
     type: 3}
+  crownPickSound: {fileID: 8300000, guid: f79f4952682ca7c48af41618a489907e, type: 3}
   OnCrownPicked:
     m_PersistentCalls:
       m_Calls:
@@ -559,3 +560,4 @@ MonoBehaviour:
   goalCamera: {fileID: 206890094426723332}
   goalParticles: {fileID: 1447744513898393007, guid: a4f4195160c1cce4c9389f35912ad38d,
     type: 3}
+  levelCompleteSound: {fileID: 8300000, guid: 42a6d246cec58ea4ba4e9f11ef79e29f, type: 3}
