@@ -6,7 +6,7 @@ using Cinemachine;
 public class Goal : MonoBehaviour
 {
 
-    [SerializeField]float timeCheck = 1.5f;
+    
     [SerializeField] float radius = 2f;
     [SerializeField] Vector3 offset = new Vector3(2.5f,0f,0f);
     [SerializeField] LayerMask playerLayerMask;
@@ -14,11 +14,14 @@ public class Goal : MonoBehaviour
 
     [SerializeField] GameObject goalParticles = null;
     [SerializeField] AudioClip levelCompleteSound = null;
+    
 
 
     float timer = 0f;
     bool levelPassed = false;
     bool crownPicked = false;
+
+    float timeCheck = 0.6f;
    
     private void OnEnable() 
     {
@@ -44,6 +47,8 @@ public class Goal : MonoBehaviour
                 LevelManager.Instance.SetCurrentLevelClear(crownPicked);
                 SpawnGoalParticles();
                 SoundManager.Instance.PlaySFX(levelCompleteSound);
+                Player.Instance.FreezePlayer();
+
             }
         }
         else
@@ -96,6 +101,8 @@ public class Goal : MonoBehaviour
    {
        crownPicked = true;
    }
+
+
    
    
 }

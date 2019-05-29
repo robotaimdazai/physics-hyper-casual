@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
 
     [Header("Sounds")]
     [SerializeField] AudioClip jumpSound;
+    [SerializeField] AudioClip hitSound = null;
     
 
     static Player instance = null;
@@ -134,6 +135,16 @@ public class Player : MonoBehaviour
     {
         Vector2 offset = Vector3.right * 0.5f;
         particleController.ShowParticle(0,collision.contacts[0].point + offset,Quaternion.identity);
+        if (collision.gameObject.GetComponent<StartPlatform>()==null)
+        {
+            SoundManager.Instance.PlaySFX(hitSound);
+        }
+        
+    }
+
+    public void FreezePlayer()
+    {
+        rigidbody2d.velocity = Vector3.zero;
     }
 
    

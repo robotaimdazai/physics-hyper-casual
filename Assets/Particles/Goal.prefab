@@ -561,3 +561,4 @@ MonoBehaviour:
   goalParticles: {fileID: 1447744513898393007, guid: a4f4195160c1cce4c9389f35912ad38d,
     type: 3}
   levelCompleteSound: {fileID: 8300000, guid: 42a6d246cec58ea4ba4e9f11ef79e29f, type: 3}
+  playerHitSound: {fileID: 8300000, guid: 67831d9682bbd0543b5bf666ed2bb300, type: 3}

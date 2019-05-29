@@ -16,8 +16,8 @@ public class Floor : MonoBehaviour
             Player.Instance.DeathCameraFollowPlayer();
             Player.Instance.TurnOffCamera();
             UIManager.Instance.OpenFailScreen();
-            SoundManager.Instance.PlaySFX(failSound);
            
         }
+        SoundManager.Instance.PlaySFX(failSound);
     }
 }
