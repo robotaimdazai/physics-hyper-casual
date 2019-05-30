@@ -98,7 +98,8 @@ public class HookGrabber : MonoBehaviour
                     //grab particles
                     Player.Instance.ShowRopeGrabParticles();
                     //Show OnHook Text
-                    UIManager.Instance.ShowOnHookText("Smooth");
+                    string randomText = OnHookTexts.GetRandom();
+                    UIManager.Instance.ShowOnHookText(randomText);
                     
                     SoundManager.Instance.PlaySFX(grabHookSound);
 
