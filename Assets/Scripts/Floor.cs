@@ -15,6 +15,7 @@ public class Floor : MonoBehaviour
             Player.Instance.SetDeathCameraPosition();
             Player.Instance.DeathCameraFollowPlayer();
             Player.Instance.TurnOffCamera();
+            AdManager.Instance.ShowAd();
             UIManager.Instance.OpenFailScreen();
            
         }
