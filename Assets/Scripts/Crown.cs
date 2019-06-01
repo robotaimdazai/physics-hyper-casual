@@ -16,6 +16,7 @@ public class Crown : MonoBehaviour
             gameObject.SetActive(false);
         }
     }
+
     private void OnTriggerEnter2D(Collider2D other) 
     {
         if (other.CompareTag("Player"))
@@ -25,6 +26,7 @@ public class Crown : MonoBehaviour
             if (OnCrownPicked!=null)
             {
                 OnCrownPicked.Invoke();
+                CrownManager.Instance.CrownCount++;
                 SoundManager.Instance.PlaySFX(crownPickSound);
             }
 

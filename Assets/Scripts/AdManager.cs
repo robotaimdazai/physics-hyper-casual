@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using GoogleMobileAds.Api;
+using System;
 
 public class AdManager : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class AdManager : MonoBehaviour
     [SerializeField] string interstitialAdID;
 
     private InterstitialAd interstitial;
+    int adsAfterFailCount = 3;
+    private int currentCount = 0;
 
     /// <summary>
     /// Awake is called when the script instance is being loaded.
@@ -61,6 +64,8 @@ public class AdManager : MonoBehaviour
 
         // Initialize an InterstitialAd.
         this.interstitial = new InterstitialAd(interstitialAdID);
+        this.interstitial.OnAdOpening += HandleOnAdOpened;
+
         // Create an empty ad request.
         AdRequest request = new AdRequest.Builder().Build();
         // Load the interstitial with the request.
@@ -70,12 +75,24 @@ public class AdManager : MonoBehaviour
 
     public void ShowAd()
     {
-        if (this.interstitial.IsLoaded()) 
+        if(currentCount>=adsAfterFailCount)
         {
-            this.interstitial.Show();
+            if (this.interstitial.IsLoaded()) 
+            {
+                this.interstitial.Show();
+            }
         }
-
+        else
+        {
+            currentCount++;
+        }
     }
+
+    public void HandleOnAdOpened(object sender, EventArgs args)
+    {
+        currentCount = 0;
+    }
+
 
 
     

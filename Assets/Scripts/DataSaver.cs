@@ -9,6 +9,7 @@ public class DataSaver
 {
     public static readonly string LevelDataSavePath = "LevelDataSavePath.Dat";
     public static readonly string LastLevelPlayedSavePath = "LastLevelSavePAth.Dat";
+    public static readonly string CrownCountSavePath = "CrownCountSavePath.Dat";
 
     public static void SaveLevelData(LevelData[] levelDataArray)
     {
@@ -55,4 +56,29 @@ public class DataSaver
         
         return ret;
     }
+
+    public static void SaveCrownCount(int level)
+    {
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file = File.Create(Application.persistentDataPath + CrownCountSavePath);
+        bf.Serialize(file,level);
+        file.Close();
+    }
+
+    public static int LoadCrownCount()
+    {
+         int ret = -1;
+        
+        if (File.Exists(Application.persistentDataPath+ CrownCountSavePath))
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream file = File.Open(Application.persistentDataPath + CrownCountSavePath, FileMode.Open);
+            ret = (int)bf.Deserialize(file);
+            file.Close();
+        }
+        
+        return ret;
+    }
+
 }
+

@@ -10,6 +10,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] Screen failScreen = null;
     [SerializeField] Screen passScreen = null;
     [SerializeField] Screen levelScreen = null;
+    [SerializeField] Screen skinScreen = null;
 
     [SerializeField]Transform[] elementsToHide;
 
@@ -95,6 +96,11 @@ public class UIManager : MonoBehaviour
     public void OpenLevelScreen()
     {
         SwitchScreen(levelScreen);
+    }
+
+    public void OpenCharacterSelectionScreen()
+    {
+        SwitchScreen(skinScreen);
     }
 
     public void HideElements()
