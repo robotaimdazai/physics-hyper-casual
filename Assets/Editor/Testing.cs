@@ -31,6 +31,24 @@ public class Testing:MonoBehaviour
             File.Delete(Application.persistentDataPath + DataSaver.LastLevelPlayedSavePath);
             Debug.Log("last level data deleted");
         }
+        if (File.Exists(Application.persistentDataPath + DataSaver.CrownCountSavePath))
+        {
+            File.Delete(Application.persistentDataPath + DataSaver.CrownCountSavePath);
+            Debug.Log("Crown data deleted");
+        }
+        if (File.Exists(Application.persistentDataPath + DataSaver.CharacterDataPath))
+        {
+            File.Delete(Application.persistentDataPath + DataSaver.CharacterDataPath);
+            Debug.Log("Characters data deleted");
+        }
 
+    }
+
+    [MenuItem("Testing/Reset HighScore")]
+    public static void ResetHighScore()
+    {
+        string highScoreKey = "HighScore";
+        PlayerPrefs.DeleteKey(highScoreKey);
+      
     }
 }

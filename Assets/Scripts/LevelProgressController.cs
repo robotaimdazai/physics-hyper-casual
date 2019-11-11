@@ -33,14 +33,10 @@ public class LevelProgressController : MonoBehaviour
 
     void Start()
     {
-        RecalculateGoalDistance();
+        
     }
 
-    public void RecalculateGoalDistance()
-    {
-        activeGoal = Goal.GetActiveGoal();
-        totalDistance = activeGoal.transform.position.x - Player.Instance.transform.position.x;
-    }
+    
 
 
     // Update is called once per frame

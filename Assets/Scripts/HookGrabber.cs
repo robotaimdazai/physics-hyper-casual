@@ -18,8 +18,12 @@ public class HookGrabber : MonoBehaviour
     RopeRenderer ropeRenderer = null;
     Hook _connectedHook = null;
     bool isDashAvailable = false;
+    HighScoreController highScoreController;
 
-   
+    private void Awake()
+    {
+        highScoreController = FindObjectOfType<HighScoreController>();
+    }
 
     private void Start()
     {
@@ -31,7 +35,7 @@ public class HookGrabber : MonoBehaviour
     {
         if (!GameManager.Instance.InGameLoop)
         {
-            //return;
+            return;
         }
 
         if (InputController.Instance.IsTapped)
@@ -41,6 +45,7 @@ public class HookGrabber : MonoBehaviour
             //only find nearest hook if not hooked already
             if (_connectedHook==null)
             {
+                Debug.Log("Grabbing");
                 GrabNearestNonActiveHook();
             }
             
@@ -51,13 +56,15 @@ public class HookGrabber : MonoBehaviour
                 
                 Vector3 hookPos = _connectedHook.transform.position + Vector3.down * 5f;
                 ropeRenderer.DrawRope(transform.position, hookPos);
+                highScoreController.SetScore(transform.position.x);
             }
             
-
+            
 
         }
         else if (!InputController.Instance.IsTapped)
         {
+            
             if (_connectedHook)
             {
                 UnHook();
@@ -67,9 +74,8 @@ public class HookGrabber : MonoBehaviour
                 isDashAvailable = true;
                 ropeRenderer.ClearRope();
                 SoundManager.Instance.PlaySFX(unhookSound);
-
-
             }
+            
         }
 
         // when player is connected to hook this velocity acceerates the swing
@@ -90,6 +96,7 @@ public class HookGrabber : MonoBehaviour
             {
                 if (!hook.IsOn)
                 {
+
                     _connectedHook = hook;
                     GrabHook(_connectedHook, _rigidbody);
 
@@ -100,11 +107,14 @@ public class HookGrabber : MonoBehaviour
                     //Show OnHook Text
                     string randomText = OnHookTexts.GetRandom();
                     UIManager.Instance.ShowOnHookText(randomText);
-                    
+
                     SoundManager.Instance.PlaySFX(grabHookSound);
 
                     isDashAvailable = false;
+                    return;
+
                 }
+                
             }
         }
     }
@@ -123,10 +133,11 @@ public class HookGrabber : MonoBehaviour
         }
     }
 
-    private void UnHook()
+    public void UnHook()
     {
         if (_connectedHook)
         {
+           
             _connectedHook.SetGrabber(null);
             _connectedHook = null;
         }

@@ -11,6 +11,8 @@ public class DataSaver
     public static readonly string LastLevelPlayedSavePath = "LastLevelSavePAth.Dat";
     public static readonly string CrownCountSavePath = "CrownCountSavePath.Dat";
 
+    public static readonly string CharacterDataPath = "CharacterDataPath.Dat";
+
     public static void SaveLevelData(LevelData[] levelDataArray)
     {
         BinaryFormatter bf = new BinaryFormatter();
@@ -74,6 +76,29 @@ public class DataSaver
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.Open(Application.persistentDataPath + CrownCountSavePath, FileMode.Open);
             ret = (int)bf.Deserialize(file);
+            file.Close();
+        }
+        
+        return ret;
+    }
+
+    public static void SaveCharactersData(Character[] characters)
+    {
+        BinaryFormatter bf = new BinaryFormatter();
+        FileStream file = File.Create(Application.persistentDataPath + CharacterDataPath);
+        bf.Serialize(file,characters);
+        file.Close();
+    }
+    
+    public static Character[] LoadCharactersData()
+    {
+         Character[] ret = null;
+        
+        if (File.Exists(Application.persistentDataPath+ CharacterDataPath))
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            FileStream file = File.Open(Application.persistentDataPath + CharacterDataPath, FileMode.Open);
+            ret = (Character[])bf.Deserialize(file);
             file.Close();
         }
         

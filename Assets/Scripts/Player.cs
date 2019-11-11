@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
 
     [SerializeField]CinemachineVirtualCamera playerCamera = null;
     [SerializeField] CinemachineVirtualCamera deathCamera = null;
+    [SerializeField] SpriteRenderer spriteRenderer = null;
 
     [Header("Sounds")]
     [SerializeField] AudioClip jumpSound;
@@ -145,6 +146,19 @@ public class Player : MonoBehaviour
     public void FreezePlayer()
     {
         rigidbody2d.velocity = Vector3.zero;
+    }
+
+    public void ChangeSkin(Sprite sprite)
+    {
+        if (spriteRenderer)
+        {
+            spriteRenderer.sprite = sprite;
+        }
+    }
+
+    public void UnHook()
+    {
+        hookGrabber.UnHook();
     }
 
    

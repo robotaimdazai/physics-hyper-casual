@@ -15,14 +15,16 @@ public class LevelManager : MonoBehaviour
     [SerializeField] Transform levelSelectionPanel = null;
     [SerializeField] TextMeshProUGUI currentLevelText = null;
     [SerializeField] TextMeshProUGUI crownsAchievedText = null;
+    [SerializeField] Transform levelTransform = null;
 
     [Header("Level")]
     public LevelData[] levels;
 
 
-    Transform activeLevel = null;
     int activeLevelIndex = 0;
-    Goal activeGoal = null;
+    HookSpawner hookSpawner = null;
+    HighScoreController highscoreController = null;
+    
 
     /// <summary>
     /// Awake is called when the script instance is being loaded.
@@ -38,6 +40,9 @@ public class LevelManager : MonoBehaviour
             Destroy(gameObject);
         }
         DontDestroyOnLoad(gameObject);
+
+        hookSpawner = FindObjectOfType<HookSpawner>();
+        highscoreController = FindObjectOfType<HighScoreController>();
 
         Init();
     }
@@ -59,7 +64,6 @@ public class LevelManager : MonoBehaviour
         CreateLevelButtons();
         //Activate Level 1 at start
         ActivateLevel(levelToLoad);
-        activeGoal = Goal.GetActiveGoal();
         UpdateCrownsAchieved();
     }
     
@@ -110,7 +114,7 @@ public class LevelManager : MonoBehaviour
             Transform currentLevel = transform.GetChild(i);
             if (i==levelToActivateInChild)
             {
-                activeLevel = currentLevel;
+                
                 currentLevel.gameObject.SetActive(true);
                 if (currentLevelText)
                 {
@@ -124,8 +128,8 @@ public class LevelManager : MonoBehaviour
         }
 
         SetPlayerToStartPosition();
-        activeGoal = Goal.GetActiveGoal();
-        LevelProgressController.Instance.RecalculateGoalDistance();
+        
+        
     }
 
     private void SetPlayerToStartPosition()
@@ -152,15 +156,18 @@ public class LevelManager : MonoBehaviour
     public void RetryLevel()
     {
         //turning off and on enables all hooks by onEnable Function
-        activeLevel.gameObject.SetActive(false);
-        activeLevel.gameObject.SetActive(true);
-        GameManager.Instance.InGameLoop = true;
+
         SetPlayerToStartPosition();
+        GameManager.Instance.InGameLoop = true;
+
+
         UIManager.Instance.OpenHomeScreen();
-        activeGoal.ResetLevelStatus();
-        activeGoal.TurnOffCamera();
         Player.Instance.DeathCameraUnFollowPlayer();
         Player.Instance.TurnOnCamera();
+        Player.Instance.UnHook();
+        ResetAllHooks();
+        hookSpawner.Reset();
+        highscoreController.ResetText();
     }
 
     public void LoadNextLevel()
@@ -174,8 +181,7 @@ public class LevelManager : MonoBehaviour
         GameManager.Instance.InGameLoop = true;
         ActivateLevel(nextLevel);
         UIManager.Instance.OpenHomeScreen();
-        activeGoal.ResetLevelStatus();
-        activeGoal.TurnOffCamera();
+
         Player.Instance.DeathCameraUnFollowPlayer();
         Player.Instance.TurnOnCamera();
     }
@@ -266,5 +272,16 @@ public class LevelManager : MonoBehaviour
         return ret;
     }
 
+    void ResetAllHooks()
+    {
+        foreach (Transform item in levelTransform)
+        {
+            Hook hook = item.GetComponent<Hook>();
+            if (hook!=null)
+            {
+                hook.IsOn = false;
+            }
+        }
+    }
    
 }

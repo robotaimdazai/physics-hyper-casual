@@ -8,12 +8,13 @@ public class Parallax : MonoBehaviour
     [SerializeField] float _parallaxAmount = 1f;
 
     float _length, _startPos;
+    float offset = 25; //  see ahead offset
     
 
     void Start()
     {
         _startPos = transform.position.x;
-        _length = GetComponent<SpriteRenderer>().bounds.size.x;
+        _length = GetComponent<SpriteRenderer>().bounds.size.x/2;
     }
 
     private void FixedUpdate()
@@ -23,7 +24,7 @@ public class Parallax : MonoBehaviour
         float distance = (_camera.transform.position.x * _parallaxAmount);
         transform.position = new Vector3(_startPos + distance,transform.position.y,transform.position.z);
 
-        if (temp > _startPos + _length)
+        if (temp > _startPos + _length - offset)
         {
             _startPos += _length;
         }

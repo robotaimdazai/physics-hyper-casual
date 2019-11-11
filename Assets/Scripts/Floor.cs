@@ -5,6 +5,13 @@ using UnityEngine.SceneManagement;
 
 public class Floor : MonoBehaviour
 {
+    HighScoreController highscoreController;
+
+    private void Awake()
+    {
+        highscoreController = FindObjectOfType<HighScoreController>();
+    }
+
     [SerializeField] AudioClip failSound;
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -17,7 +24,9 @@ public class Floor : MonoBehaviour
             Player.Instance.TurnOffCamera();
             AdManager.Instance.ShowAd();
             UIManager.Instance.OpenFailScreen();
-           
+            highscoreController.ShowFailScreenText();
+
+
         }
         SoundManager.Instance.PlaySFX(failSound);
     }
